@@ -1,5 +1,6 @@
 # Fdb version 4
-["pdflatex"] 1750524781.77026 "showcase_aop.tex" "showcase_aop.pdf" "showcase_aop" 1750524783.27972 0
+["pdflatex"] 1750525891.02534 "/home/andre/uni/25-1/topicos3/project-pc3/presentacion/showcase_aop.tex" "showcase_aop.pdf" "showcase_aop" 1750525892.37235 0
+  "/home/andre/uni/25-1/topicos3/project-pc3/presentacion/showcase_aop.tex" 1750525890.85877 11869 b12c9fa178c1f2f81ebaa0304ca3153a ""
   "/usr/share/texmf-dist/fonts/map/fontname/texfonts.map" 1742685315 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1742685315 1004 54797486969f23fa377b128694d548df ""
   "/usr/share/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1742685315 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""
@@ -240,11 +241,11 @@
   "/usr/share/texmf-dist/web2c/texmf.cnf" 1742685315 42087 b0f9697c952c8f5a8eede4134282cb0d ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1749402854 5308427 8263544808c0816e19e20725fd074e92 ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1749402825 2008233 a343f1b0de78757117ad7bf76f26bc71 ""
-  "showcase_aop.aux" 1750524783.1892 3827 a9689def6c3d2eaca26bfc01fc6cdd56 "pdflatex"
-  "showcase_aop.nav" 1750524783.19026 2322 ffee4b15992017f1866a1a30539d5c2e "pdflatex"
-  "showcase_aop.out" 1750524783.18956 834 fda8de59febfdd0510c96632f2e1d5b7 "pdflatex"
-  "showcase_aop.tex" 1750524756.97623 9964 a95e1c6096edd070671a29c559adcf48 ""
-  "showcase_aop.vrb" 1750524782.98045 692 1faf149c59b42c27c492c6bad9e19353 "pdflatex"
+  "showcase_aop.aux" 1750525892.3025 4529 7647e123f04dba870c9e57d248c5cebd "pdflatex"
+  "showcase_aop.nav" 1750525892.30347 2783 b72d4f87d44e923543edbb1f3211da8a "pdflatex"
+  "showcase_aop.out" 1750525892.30278 1001 330cbf8d8da0523ae619a3b97a280d61 "pdflatex"
+  "showcase_aop.tex" 1750525890.85877 11869 b12c9fa178c1f2f81ebaa0304ca3153a ""
+  "showcase_aop.vrb" 1750525892.12808 1064 89b58aef7992a1ae3dafb10f196c63a8 "pdflatex"
   (generated)
   "showcase_aop.aux"
   "showcase_aop.log"

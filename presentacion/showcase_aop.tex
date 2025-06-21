@@ -46,7 +46,7 @@
 \lstset{style=pythonstyle}
 
 \tikzset{
-    state/.style={circle, draw, text width=2cm, align=center, minimum size=1.5cm}
+    state/.style={circle, draw, text width=1.7cm, align=center, minimum size=1.5cm}
 }
 
 \begin{document}
@@ -62,31 +62,37 @@
 
 \begin{frame}{¿Qué es Programación Orientada a Aspectos (AOP)?}
     \begin{itemize}
-        \item<1-> Es un paradigma de programación que busca la **separación de incumbencias** (separation of concerns).
+        \item<1-> Es un paradigma de programación que busca la \textbf{separación de incumbencias} (separation of concerns).
         \item<2-> Permite modularizar funcionalidades que "atraviesan" múltiples partes de una aplicación, conocidas como \textit{cross-cutting concerns}.
         \item<3-> Ejemplos comunes:
         \begin{itemize}
             \item Logging y Auditoría
             \item Seguridad y Autenticación
-            \item Caching
-            \item Medición de rendimiento (Métricas)
+            \item Caching y Métricas
+            \item \textbf{Validación de datos}
         \end{itemize}
-        \item<4-> En Python, una forma muy popular de implementar AOP es a través de **decoradores**.
+        \item<4-> En Python, una forma muy popular de implementar AOP es a través de \textbf{decoradores}.
     \end{itemize}
 \end{frame}
 
 \begin{frame}{Flujo de un Request a través de los Aspectos}
     \centering
-    \begin{tikzpicture}[node distance=2.8cm, auto, >=Stealth]
+    \begin{tikzpicture}[node distance=1.8cm and 1.2cm, auto, >=Stealth]
+        % Fila superior
         \node[state] (req) {Request};
         \node[state, right=of req] (secure) {\texttt{@secure}};
-        \node[state, right=of secure] (metrics) {\texttt{@metrics}};
-        \node[state, below=1.5cm of metrics] (cache) {\texttt{@cache}};
+        \node[state, right=of secure] (validate) {\texttt{@validate}};
+
+        % Fila inferior (flujo de vuelta)
+        \node[state, below=of validate] (metrics) {\texttt{@metrics}};
+        \node[state, left=of metrics] (cache) {\texttt{@cache}};
         \node[state, left=of cache] (logic) {Lógica de\\Negocio};
         \node[state, left=of logic] (resp) {Response};
 
+        % Conexiones
         \path[->] (req) edge (secure);
-        \path[->] (secure) edge (metrics);
+        \path[->] (secure) edge (validate);
+        \path[->] (validate) edge (metrics);
         \path[->] (metrics) edge (cache);
         \path[->] (cache) edge (logic);
         \path[->] (logic) edge (resp);
@@ -118,20 +124,17 @@
 \begin{frame}[fragile]{Implementación del Decorador \texttt{@secure}}
     \begin{lstlisting}
 def secure(roles=None):
-    if roles is None:
-        roles = []
+    if roles is None: roles = []
 
     def decorator(view):
         @functools.wraps(view)
         def wrapped_view(**kwargs):
-            # Asumimos que g.user existe
             if g.user is None:
                 abort(401)  # Unauthorized
             
             if roles and g.user['role'] not in roles:
                 abort(403)  # Forbidden
 
-            # Log de seguridad (otro aspecto)
             print(f"Acceso concedido a {g.user['username']}")
             return view(**kwargs)
         return wrapped_view
@@ -159,17 +162,10 @@ def secure(roles=None):
 \begin{frame}[fragile]{Ejemplo de Uso en la Vista de Productos}
     \begin{lstlisting}
 @bp.route('/')
-@login_required
 @metrics
 @cache(ttl=60)
 def list_products():
-    """Muestra la lista de productos."""
-    db = get_db()
-    products = db.execute(
-        'SELECT id, name, price, stock FROM product'
-    ).fetchall()
-    return render_template('fragments/products.html', 
-                           products=products)
+    # ...
     \end{lstlisting}
 \end{frame}
 
@@ -197,28 +193,74 @@ CACHE: Hit for key 'list_products:{}'.
 
 \begin{frame}[fragile]{Auditoría (\texttt{@audit}) y Feature Flags (\texttt{@feature\_flag})}
     \begin{block}{\texttt{@audit(action='view\_order')}}
-        Registra quién, qué y cuándo se realizó una acción. Fundamental para trazabilidad.
+        Registra quién, qué y cuándo se realizó una acción.
     \end{block}
     \begin{lstlisting}
-@bp.route('/<int:id>')
-@login_required
 @audit(action='view_order')
-def view_order(id):
-    # ...
+def view_order(id): # ...
     \end{lstlisting}
 
     \begin{block}{\texttt{@feature\_flag('promo\_editor')}}
-        Permite activar o desactivar funcionalidades en tiempo real sin redesplegar. La UI se adapta según un valor en la BBDD.
+        Permite activar o desactivar funcionalidades en tiempo real.
     \end{block}
     \begin{lstlisting}
-@bp.route('/', methods=('GET', 'POST'))
-@login_required
 @feature_flag('promo_editor')
-def manage_promotions():
-    # ...
+def manage_promotions(): # ...
     \end{lstlisting}
 \end{frame}
 
+% ===================================================================
+\section{Validación con Pydantic}
+% ===================================================================
+
+\begin{frame}{Aspecto de Validación: \texttt{@validate\_with}}
+    \begin{block}{Objetivo}
+        Validar los datos de entrada (ej. formularios) de forma declarativa, separando las reglas de la lógica de la vista.
+    \end{block}
+    \begin{itemize}
+        \item Se define un \textbf{esquema} con Pydantic que representa la estructura y reglas de los datos.
+        \item El decorador \texttt{@validate\_with} intercepta el request, valida los datos contra el esquema y, si es exitoso, los adjunta al objeto `g` de Flask.
+        \item Si la validación falla, muestra un error al usuario y detiene la ejecución.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Paso 1: Definir el Esquema Pydantic}
+    \begin{lstlisting}
+// file: app/schemas.py
+from pydantic import BaseModel, Field
+from datetime import date
+
+class PromotionSchema(BaseModel):
+    name: str
+    discount_percent: float = Field(
+        ..., gt=0, lt=100,
+        description="El descuento debe ser entre 0 y 100."
+    )
+    start_date: date
+    end_date: date
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Paso 2: Aplicar el Decorador}
+    \begin{lstlisting}
+// file: app/promotions/routes.py
+from app.schemas import PromotionSchema
+
+@bp.route('/', methods=('GET', 'POST'))
+@feature_flag('promo_editor')
+@validate_with(PromotionSchema)
+def manage_promotions():
+    if request.method == 'POST':
+        # No hay if/else de validacion!
+        # Los datos ya estan validados en g.validated_data
+        promo = g.validated_data
+        db.execute(
+            'INSERT INTO promotion ...',
+            (promo.name, promo.discount_percent, ...)
+        )
+        # ...
+    \end{lstlisting}
+\end{frame}
 
 % ===================================================================
 \section{Demo Práctica y Conclusiones}
@@ -245,7 +287,11 @@ def manage_promotions():
         \item Clonar el repositorio y crear entorno virtual.
         \item Instalar dependencias:
         \begin{lstlisting}[language=bash]
-pip install -r requirements.txt
+uv pip install -r requirements.txt
+        \end{lstlisting}
+        \item Instalar el proyecto en modo editable (para que pytest funcione):
+        \begin{lstlisting}[language=bash]
+pip install -e .
         \end{lstlisting}
         \item Inicializar la base de datos (crea y puebla `project.sqlite`):
         \begin{lstlisting}[language=bash]
@@ -255,14 +301,18 @@ flask --app app init-db
         \begin{lstlisting}[language=bash]
 flask --app run
         \end{lstlisting}
-        \item Acceder en \texttt{http://127.0.0.1:5000} (user: admin, pass: admin).
+        \item Acceder en \texttt{http://127.0.0.1:5000}.
+            \begin{itemize}
+                \item user: \texttt{admin}, pass: \texttt{admin} (acceso total)
+                \item user: \texttt{featureuser}, pass: \texttt{password} (para ver feature flag)
+            \end{itemize}
     \end{enumerate}
     \end{block}
 \end{frame}
 
 \begin{frame}{Ventajas y Conclusiones}
     \begin{itemize}
-        \item<1-> \textbf{Código más limpio:} La lógica de negocio (vistas de Flask) no se contamina con código de seguridad, cache, etc.
+        \item<1-> \textbf{Código más limpio:} La lógica de negocio no se contamina con código de seguridad, cache, validación, etc.
         \item<2-> \textbf{Reutilización:} Los decoradores se pueden aplicar a cualquier vista con una sola línea.
         \item<3-> \textbf{Mantenibilidad:} Si se necesita cambiar la lógica de logging, solo se modifica el decorador \texttt{@audit}, no todas las vistas que lo usan.
         \item<4-> \textbf{Testabilidad:} Cada aspecto puede ser probado de forma aislada.

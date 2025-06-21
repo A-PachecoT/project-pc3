@@ -3,4 +3,5 @@
 \beamer@sectionintoc {2}{Seguridad (\texttt {@secure})}{7}{0}{2}
 \beamer@sectionintoc {3}{Cache y Métricas}{9}{0}{3}
 \beamer@sectionintoc {4}{Auditoría y Feature Flags}{12}{0}{4}
-\beamer@sectionintoc {5}{Demo Práctica y Conclusiones}{13}{0}{5}
+\beamer@sectionintoc {5}{Validación con Pydantic}{13}{0}{5}
+\beamer@sectionintoc {6}{Demo Práctica y Conclusiones}{16}{0}{6}

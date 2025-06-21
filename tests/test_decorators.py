@@ -128,7 +128,7 @@ def test_feature_flag_decorator_on(client):
 
     response = client.get("/promotions/")
     assert response.status_code == 200
-    assert b"Create New Promotion" in response.data
+    assert b"Crear Nueva Promoci" in response.data
 
 
 def test_feature_flag_decorator_off(client):

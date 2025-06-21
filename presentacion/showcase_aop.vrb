@@ -4,7 +4,11 @@
         \item Clonar el repositorio y crear entorno virtual.
         \item Instalar dependencias:
         \begin{lstlisting}[language=bash]
-pip install -r requirements.txt
+uv pip install -r requirements.txt
+        \end{lstlisting}
+        \item Instalar el proyecto en modo editable (para que pytest funcione):
+        \begin{lstlisting}[language=bash]
+pip install -e .
         \end{lstlisting}
         \item Inicializar la base de datos (crea y puebla `project.sqlite`):
         \begin{lstlisting}[language=bash]
@@ -14,6 +18,10 @@ flask --app app init-db
         \begin{lstlisting}[language=bash]
 flask --app run
         \end{lstlisting}
-        \item Acceder en \texttt{http://127.0.0.1:5000} (user: admin, pass: admin).
+        \item Acceder en \texttt{http://127.0.0.1:5000}.
+            \begin{itemize}
+                \item user: \texttt{admin}, pass: \texttt{admin} (acceso total)
+                \item user: \texttt{featureuser}, pass: \texttt{password} (para ver feature flag)
+            \end{itemize}
     \end{enumerate}
     \end{block}

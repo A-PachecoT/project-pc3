@@ -1,7 +1,7 @@
 PWD /home/andre/uni/25-1/topicos3/project-pc3/presentacion
 INPUT /usr/share/texmf-dist/web2c/texmf.cnf
 INPUT /var/lib/texmf/web2c/pdftex/pdflatex.fmt
-INPUT showcase_aop.tex
+INPUT /home/andre/uni/25-1/topicos3/project-pc3/presentacion/showcase_aop.tex
 OUTPUT showcase_aop.log
 INPUT /usr/share/texmf-dist/tex/latex/beamer/beamer.cls
 INPUT /usr/share/texmf-dist/tex/latex/beamer/beamer.cls
@@ -408,8 +408,10 @@ INPUT /usr/share/texmf-dist/fonts/tfm/public/cm/cmss12.tfm
 INPUT /usr/share/texmf-dist/fonts/tfm/public/cm/cmss8.tfm
 INPUT /usr/share/texmf-dist/fonts/tfm/public/cm/cmss8.tfm
 INPUT /var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map
+INPUT /usr/share/texmf-dist/fonts/tfm/public/cm/cmssbx10.tfm
 INPUT /usr/share/texmf-dist/fonts/tfm/public/cm/cmssi10.tfm
 INPUT /usr/share/texmf-dist/fonts/tfm/public/cm/cmss10.tfm
+INPUT /usr/share/texmf-dist/fonts/tfm/public/cm/cmssbx10.tfm
 INPUT /usr/share/texmf-dist/fonts/tfm/public/cm/cmtt10.tfm
 INPUT /usr/share/texmf-dist/fonts/tfm/public/cm/cmss12.tfm
 INPUT /usr/share/texmf-dist/fonts/tfm/public/cm/cmtt12.tfm
@@ -427,7 +429,6 @@ OUTPUT showcase_aop.vrb
 INPUT ./showcase_aop.vrb
 INPUT ./showcase_aop.vrb
 INPUT showcase_aop.vrb
-INPUT /usr/share/texmf-dist/fonts/tfm/public/cm/cmssbx10.tfm
 INPUT /usr/share/texmf-dist/tex/latex/listings/lstlang1.sty
 INPUT /usr/share/texmf-dist/tex/latex/listings/lstlang1.sty
 INPUT /usr/share/texmf-dist/tex/latex/listings/lstlang1.sty
@@ -439,6 +440,14 @@ INPUT ./showcase_aop.vrb
 INPUT ./showcase_aop.vrb
 INPUT showcase_aop.vrb
 INPUT /usr/share/texmf-dist/fonts/tfm/public/cm/cmtt12.tfm
+OUTPUT showcase_aop.vrb
+INPUT ./showcase_aop.vrb
+INPUT ./showcase_aop.vrb
+INPUT showcase_aop.vrb
+OUTPUT showcase_aop.vrb
+INPUT ./showcase_aop.vrb
+INPUT ./showcase_aop.vrb
+INPUT showcase_aop.vrb
 INPUT /usr/share/texmf-dist/tex/latex/mwe/example-image-a.tex
 INPUT /usr/share/texmf-dist/tex/latex/mwe/example-image-a.tex
 INPUT /usr/share/texmf-dist/tex/latex/mwe/example-image-a.pdf
@@ -483,6 +492,7 @@ OUTPUT showcase_aop.vrb
 INPUT ./showcase_aop.vrb
 INPUT ./showcase_aop.vrb
 INPUT showcase_aop.vrb
+INPUT /usr/share/texmf-dist/fonts/tfm/public/cm/cmtt10.tfm
 INPUT /usr/share/texmf-dist/fonts/tfm/public/cm/cmss17.tfm
 INPUT /usr/share/texmf-dist/fonts/tfm/public/cm/cmssbx10.tfm
 OUTPUT showcase_aop.nav
