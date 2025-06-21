@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Listado de Productos</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Precio</th>
+        <th>Inventario</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for product in products %}
+        <tr>
+          <td>{{ product['id'] }}</td>
+          <td>{{ product['name'] }}</td>
+          <td>${{ "%.2f"|format(product['price']) }}</td>
+          <td>{{ product['stock'] }}</td>
+        </tr>
+      {% else %}
+        <tr>
+          <td colspan="4">No se encontraron productos.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

@@ -1,0 +1,22 @@
+# Latex
+*.aux
+*.log
+*.out
+*.pdf
+*.snm
+*.toc
+*.vrb
+*.nav
+*.fls
+*.fdb_latexmk
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pyw
+*.pyz
+*.pywz
+*.pyzw
+*.pyzwz

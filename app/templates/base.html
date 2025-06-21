@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración</title>
+    <style>
+        body { font-family: sans-serif; margin: 0; }
+        header { background: #333; color: white; padding: 1rem; }
+        nav { display: flex; justify-content: space-between; align-items: center; }
+        nav a { color: white; text-decoration: none; padding: 0.5rem 1rem; }
+        nav a:hover { background: #555; }
+        .container { padding: 1rem; }
+        .content { border: 1px solid #ccc; padding: 1rem; margin-top: 1rem; }
+        h1, h2 { color: #333; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div>
+                <a href="{{ url_for('products.list_products') }}">Productos</a>
+                <a href="{{ url_for('orders.view_order', id=1) }}">Detalles de Pedido</a>
+                <a href="{{ url_for('transactions.list_transactions') }}">Transacciones</a>
+                <a href="{{ url_for('promotions.manage_promotions') }}">Promociones</a>
+            </div>
+            <div>
+                {% if g.user %}
+                    <span>{{ g.user['username'] }}</span>
+                    <a href="{{ url_for('auth.logout') }}">Cerrar Sesión</a>
+                {% else %}
+                    <a href="{{ url_for('auth.login') }}">Iniciar Sesión</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+    <main class="container">
+        {% for message in get_flashed_messages() %}
+            <div class="flash">{{ message }}</div>
+        {% endfor %}
+        <div class="content">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+</body>
+</html>

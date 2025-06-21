@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Pedido #{{ order['id'] }}</h2>
+  <div>
+    <p><strong>Cliente:</strong> {{ order['customer_name'] }}</p>
+    <p><strong>Monto Total:</strong> ${{ "%.2f"|format(order['total_amount']) }}</p>
+    <p><strong>Estado:</strong> {{ order['status'] }}</p>
+    <p><strong>Fecha:</strong> {{ order['created_at'] }}</p>
+  </div>
+{% endblock %}

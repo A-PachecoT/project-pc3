@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Historial de Transacciones</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Descripción</th>
+        <th>Monto</th>
+        <th>Fecha</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for tx in transactions %}
+        <tr>
+          <td>{{ tx['id'] }}</td>
+          <td>{{ tx['description'] }}</td>
+          <td>${{ "%.2f"|format(tx['amount']) }}</td>
+          <td>{{ tx['created_at'] }}</td>
+        </tr>
+      {% else %}
+        <tr>
+          <td colspan="4">No se encontraron transacciones.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div class="pagination">
+    {% if page > 1 %}
+      <a href="{{ url_for('transactions.list_transactions', page=page-1) }}">Anterior</a>
+    {% endif %}
+    <span>Página {{ page }}</span>
+    {# A simple way to check if there are more pages #}
+    {% if transactions|length == 10 %}
+      <a href="{{ url_for('transactions.list_transactions', page=page+1) }}">Siguiente</a>
+    {% endif %}
+  </div>
+{% endblock %}

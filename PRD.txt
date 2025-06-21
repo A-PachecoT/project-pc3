@@ -1,0 +1,143 @@
+**Product Requirements Document (PRD)**
+**Proyecto:** Panel de Control de E-commerce (“Admin Dashboard”)
+**Stack Tecnológico:** Flask + Jinja2 + SQLite + Micro-frontends con inyección de HTML
+**Objetivo:** Crear un dashboard minimalista que sirva como showcase teórico y práctico de AOP en Python, usando exclusivamente decoradores y/o métodos abstractos para ilustrar categorías clave (seguridad, cache, logging/auditoría, métricas, feature flags).
+
+---
+
+## 1. Visión y Objetivos
+
+* **Visión:** Un panel de administración sencillo pero completo, donde cada vista y endpoint está “envuelto” por aspectos AOP que demuestran patrones de diseño modular para cross-cutting concerns.
+* **Objetivos principales:**
+
+  1. **Teórico:** Documentar cada patrón AOP aplicado (qué hace, cuándo se dispara, ventajas).
+  2. **Práctico:** Implementar el código en Flask con decoradores claros y reutilizables, demostrando cómo se “inserta” cada concern sin ensuciar la lógica de negocio.
+  3. **Minimalista:** Base de datos SQLite, estructura de micro-frontends inyectados vía Jinja2, sin dependencias complejas.
+
+---
+
+## 2. Alcance y MVP
+
+| Funcionalidad                  | Descripción                                                           | Aspecto AOP aplicado            |
+| ------------------------------ | --------------------------------------------------------------------- | ------------------------------- |
+| **Login / Autenticación**      | Formulario de login para usuarios “admin”.                            | `@secure(roles=['admin'])`      |
+| **Listado de Productos**       | Tabla con productos (id, nombre, precio).                             | `@cache(ttl=60)` + `@metrics`   |
+| **Detalle de Pedido**          | Vista con datos de un pedido específico (cliente, total, estado).     | `@audit(action='view_order')`   |
+| **Histórico de Transacciones** | Página con listados de ventas pasadas (paginado).                     | `@cache` + `@metrics`           |
+| **Ajustes de Promociones**     | Formulario para crear/edit promociones (fecha inicio/fin, descuento). | `@feature_flag('promo_editor')` |
+
+---
+
+## 3. Audiencia y Stakeholders
+
+* **Desarrolladores Backend** interesados en AOP en Python.
+* **Arquitectos de Software** que buscan ejemplos de separación de concerns.
+* **Equipo de QA** para validar que las políticas de seguridad, caching y auditoría funcionen correctamente.
+* **PO / PM** interesado en una demo rápida de patterns AOP.
+
+---
+
+## 4. Casos de Uso / User Stories
+
+1. **Como** admin, **quiero** iniciar sesión, **para** acceder al dashboard.
+2. **Como** admin, **quiero** ver la lista de productos, **para** revisar stock y precios.
+3. **Como** admin, **quiero** consultar un pedido, **para** atender incidencias.
+4. **Como** admin, **quiero** revisar el histórico de ventas, **para** analizar rendimiento.
+5. **Como** admin, **quiero** activar/desactivar el editor de promociones, **para** controlar features beta.
+
+---
+
+## 5. Requerimientos Funcionales
+
+1. **Endpoints Flask**:
+
+   * `POST /login` → autentica y crea sesión.
+   * `GET /products` → lista productos.
+   * `GET /orders/<id>` → detalle de pedido.
+   * `GET /transactions` → histórico paginado.
+   * `GET, POST /promotions` → gestión de promociones.
+2. **Decoradores AOP**:
+
+   * `@secure(roles)`
+   * `@cache(ttl)`
+   * `@metrics` (tiempo, llamadas, errores)
+   * `@audit(action)`
+   * `@feature_flag(name)`
+3. **Micro-frontends**: cada endpoint devuelve un fragmento HTML con Jinja2 (plantillas parciales).
+4. **Teoría integrada**: comentarios en código y documentación breve (README) explicando cada patrón.
+
+---
+
+## 6. Requerimientos No Funcionales
+
+* **Ligero:** SQLite como único motor de datos.
+* **Modular:** Uso de Blueprints en Flask por cada vista.
+* **Testable:** Tests unitarios para cada decorador (simular roles, hits de cache, logs).
+* **Documentado:** Código auto-explicativo y un README con diagrama de arquitectura y flujo AOP.
+
+---
+
+## 7. Arquitectura y Diseño
+
+```
+┌────────────────────────────────────────────┐
+│                  Flask App                │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐ │
+│  │ Auth BP  │  │Products │  │ Orders   │ │
+│  └──────────┘  └──────────┘  └──────────┘ │
+│     │             │              │       │
+│    @secure       @cache        @audit   │
+│                  @metrics               │
+│                                          │
+│  ┌──────────────┐  ┌───────────────┐     │
+│  │ Transactions │  │ Promotions    │     │
+│  └──────────────┘  └───────────────┘     │
+│    @cache            @feature_flag      │
+│    @metrics                             │
+└────────────────────────────────────────────┘
+```
+
+* **Decorators**: implementados en `aop_decorators.py`
+* **Abstracción**: podría proveerse una clase base `Aspect` que define la interfaz de `before() / after()`, y cada decorador la hereda.
+* **Micro-frontends**: vistas parciales en `templates/fragments/`, inyectadas en un layout principal.
+
+---
+
+## 8. Muestra Teórica y Demostración Práctica
+
+1. **Teórico:**
+
+   * Breve slide o sección en README explicando cada concern y el ﬂujo de un request a través de los aspectos (orden de ejecución).
+2. **Práctico:**
+
+   * Código de ejemplo de `@cache`: muestra hit/miss en logs.
+   * Test de `@secure`: simula request sin credenciales y con rol no-admin.
+   * Dashboard en vivo: cargar productos, consultar un pedido y ver registros de auditoría en consola.
+
+---
+
+## 9. Entregables
+
+* **Repo GitHub** con:
+
+  * Código completo (`app.py`, Blueprints, `aop_decorators.py`, `templates/`, `static/`).
+  * `requirements.txt` (Flask, sqlite, opcional: `functools`, `pytest`).
+  * **README**: descripción, diagrama, instrucciones de setup, ejemplos de output.
+* **Slides breves** (MD o PDF) explicando patrones AOP y su mapeo al código.
+* **Tests** que validan cada decorador.
+
+---
+
+## 10. Cronograma (Fin de Semana)
+
+| Día                  | Tarea                                                 |
+| -------------------- | ----------------------------------------------------- |
+| **Viernes** (tarde)  | Setup proyecto, virtualenv, SQLite & Flask skeleton   |
+| **Sábado** (mañana)  | Implementar `@secure` y vistas de login/protected     |
+| **Sábado** (tarde)   | `@cache` + `@metrics` en listados (productos, trans.) |
+| **Domingo** (mañana) | `@audit` en detalle de pedido + pruebas unitarias     |
+| **Domingo** (tarde)  | `@feature_flag` y documentación teórica/práctica      |
+
+---
+
+Con este PRD tienes una guía clara para construir un **Panel de Control de E-commerce** que sirva de showcase para AOP en Python, mezclando teoría y práctica en un proyecto ágil y minimalista. ¡A tejer aspectos!

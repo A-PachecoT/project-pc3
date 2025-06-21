@@ -1,0 +1,19 @@
+\frametitle{Cómo Ejecutar el Demo Local}
+\begin{block}{Pasos}
+    \begin{enumerate}
+        \item Clonar el repositorio y crear entorno virtual.
+        \item Instalar dependencias:
+        \begin{lstlisting}[language=bash]
+pip install -r requirements.txt
+        \end{lstlisting}
+        \item Inicializar la base de datos (crea y puebla `project.sqlite`):
+        \begin{lstlisting}[language=bash]
+flask --app app init-db
+        \end{lstlisting}
+        \item Ejecutar la aplicación:
+        \begin{lstlisting}[language=bash]
+flask --app run
+        \end{lstlisting}
+        \item Acceder en \texttt{http://127.0.0.1:5000} (user: admin, pass: admin).
+    \end{enumerate}
+    \end{block}

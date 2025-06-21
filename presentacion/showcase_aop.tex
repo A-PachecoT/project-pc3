@@ -1,0 +1,283 @@
+\documentclass[spanish]{beamer}
+
+% --- Paquetes y configuración general ---
+\usepackage[utf8]{inputenc}
+\usepackage{babel}
+\usepackage{tikz}
+\usepackage{listings}
+\usepackage{xcolor}
+\usetikzlibrary{arrows.meta, automata, positioning}
+
+% --- Tema y apariencia ---
+\usetheme{Madrid}
+\usecolortheme{default}
+\setbeamertemplate{navigation symbols}{} % Ocultar símbolos de navegación
+
+% --- Título y autor ---
+\title{Showcase AOP en Admin Dashboard}
+\subtitle{Un ejemplo práctico con Flask y Decoradores}
+\author{Equipo AOP}
+\date{\today}
+\institute{Proyecto de Tópicos de Ingeniería de Software III}
+
+% --- Estilo para el código ---
+\definecolor{codegray}{rgb}{0.95,0.95,0.95}
+\definecolor{commentgreen}{rgb}{0.1,0.5,0.1}
+\definecolor{stringred}{rgb}{0.8,0,0}
+
+\lstdefinestyle{pythonstyle}{
+    backgroundcolor=\color{codegray},
+    commentstyle=\color{commentgreen},
+    keywordstyle=\color{blue},
+    stringstyle=\color{stringred},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    language=Python
+}
+\lstset{style=pythonstyle}
+
+\tikzset{
+    state/.style={circle, draw, text width=2cm, align=center, minimum size=1.5cm}
+}
+
+\begin{document}
+
+% --- Portada ---
+\begin{frame}
+    \titlepage
+\end{frame}
+
+% ===================================================================
+\section{Introducción y Motivación}
+% ===================================================================
+
+\begin{frame}{¿Qué es Programación Orientada a Aspectos (AOP)?}
+    \begin{itemize}
+        \item<1-> Es un paradigma de programación que busca la **separación de incumbencias** (separation of concerns).
+        \item<2-> Permite modularizar funcionalidades que "atraviesan" múltiples partes de una aplicación, conocidas como \textit{cross-cutting concerns}.
+        \item<3-> Ejemplos comunes:
+        \begin{itemize}
+            \item Logging y Auditoría
+            \item Seguridad y Autenticación
+            \item Caching
+            \item Medición de rendimiento (Métricas)
+        \end{itemize}
+        \item<4-> En Python, una forma muy popular de implementar AOP es a través de **decoradores**.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Flujo de un Request a través de los Aspectos}
+    \centering
+    \begin{tikzpicture}[node distance=2.8cm, auto, >=Stealth]
+        \node[state] (req) {Request};
+        \node[state, right=of req] (secure) {\texttt{@secure}};
+        \node[state, right=of secure] (metrics) {\texttt{@metrics}};
+        \node[state, below=1.5cm of metrics] (cache) {\texttt{@cache}};
+        \node[state, left=of cache] (logic) {Lógica de\\Negocio};
+        \node[state, left=of logic] (resp) {Response};
+
+        \path[->] (req) edge (secure);
+        \path[->] (secure) edge (metrics);
+        \path[->] (metrics) edge (cache);
+        \path[->] (cache) edge (logic);
+        \path[->] (logic) edge (resp);
+    \end{tikzpicture}
+    \vfill
+    \begin{itemize}
+        \item Un request HTTP es interceptado secuencialmente por cada decorador.
+        \item Cada "aspecto" añade su comportamiento \textit{antes} o \textit{después} de ejecutar la lógica principal de la vista.
+    \end{itemize}
+\end{frame}
+
+% ===================================================================
+\section{Seguridad (\texttt{@secure})}
+% ===================================================================
+
+\begin{frame}{Aspecto de Seguridad: \texttt{@secure}}
+    \begin{block}{Objetivo}
+        Proteger rutas para que solo usuarios con roles específicos puedan acceder.
+    \end{block}
+
+    \begin{itemize}
+        \item Se implementa como un decorador que recibe una lista de roles permitidos.
+        \item Verifica el rol del usuario almacenado en la sesión (`g.user`).
+        \item Si el usuario no tiene el rol adecuado, aborta la petición con un error HTTP 403 (Forbidden).
+        \item Si no está logueado, se le redirige al login (manejado por \texttt{@login\_required}).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Implementación del Decorador \texttt{@secure}}
+    \begin{lstlisting}
+def secure(roles=None):
+    if roles is None:
+        roles = []
+
+    def decorator(view):
+        @functools.wraps(view)
+        def wrapped_view(**kwargs):
+            # Asumimos que g.user existe
+            if g.user is None:
+                abort(401)  # Unauthorized
+            
+            if roles and g.user['role'] not in roles:
+                abort(403)  # Forbidden
+
+            # Log de seguridad (otro aspecto)
+            print(f"Acceso concedido a {g.user['username']}")
+            return view(**kwargs)
+        return wrapped_view
+    return decorator
+    \end{lstlisting}
+\end{frame}
+
+% ===================================================================
+\section{Cache y Métricas}
+% ===================================================================
+
+\begin{frame}{Aspectos de Cache y Métricas}
+    \begin{block}{Objetivos}
+        \begin{itemize}
+            \item \texttt{@cache(ttl=60)}: Almacena el resultado de una vista en memoria para evitar recálculos costosos. El `ttl` (Time To Live) define la duración en segundos.
+            \item \texttt{@metrics}: Mide y reporta el tiempo de ejecución de una vista. Es útil para identificar cuellos de botella.
+        \end{itemize}
+    \end{block}
+    
+    \begin{alertblock}{Orden de Aplicación}
+        El orden de los decoradores importa. \texttt{@metrics} debe envolver a \texttt{@cache} para medir el tiempo real, incluyendo el acierto de caché.
+    \end{alertblock}
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo de Uso en la Vista de Productos}
+    \begin{lstlisting}
+@bp.route('/')
+@login_required
+@metrics
+@cache(ttl=60)
+def list_products():
+    """Muestra la lista de productos."""
+    db = get_db()
+    products = db.execute(
+        'SELECT id, name, price, stock FROM product'
+    ).fetchall()
+    return render_template('fragments/products.html', 
+                           products=products)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Resultados en Consola}
+    \textbf{Primer request (Cache Miss):}
+    \begin{lstlisting}[language=bash]
+METRICS for 'list_products':
+  - Execution Time: 0.0028s
+CACHE: Miss for key 'list_products:{}'. Caching result.
+    \end{lstlisting}
+    
+    \vfill
+    
+    \textbf{Segundo request (Cache Hit):}
+    \begin{lstlisting}[language=bash]
+METRICS for 'list_products':
+  - Execution Time: 0.0001s
+CACHE: Hit for key 'list_products:{}'.
+    \end{lstlisting}
+\end{frame}
+
+% ===================================================================
+\section{Auditoría y Feature Flags}
+% ===================================================================
+
+\begin{frame}[fragile]{Auditoría (\texttt{@audit}) y Feature Flags (\texttt{@feature\_flag})}
+    \begin{block}{\texttt{@audit(action='view\_order')}}
+        Registra quién, qué y cuándo se realizó una acción. Fundamental para trazabilidad.
+    \end{block}
+    \begin{lstlisting}
+@bp.route('/<int:id>')
+@login_required
+@audit(action='view_order')
+def view_order(id):
+    # ...
+    \end{lstlisting}
+
+    \begin{block}{\texttt{@feature\_flag('promo\_editor')}}
+        Permite activar o desactivar funcionalidades en tiempo real sin redesplegar. La UI se adapta según un valor en la BBDD.
+    \end{block}
+    \begin{lstlisting}
+@bp.route('/', methods=('GET', 'POST'))
+@login_required
+@feature_flag('promo_editor')
+def manage_promotions():
+    # ...
+    \end{lstlisting}
+\end{frame}
+
+
+% ===================================================================
+\section{Demo Práctica y Conclusiones}
+% ===================================================================
+
+\begin{frame}{Demo: UI del Dashboard}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \textbf{Login de Usuario}\\
+            \includegraphics[width=\textwidth]{example-image-a}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \textbf{Lista de Productos}\\
+            \includegraphics[width=\textwidth]{example-image-b}
+        \end{column}
+    \end{columns}
+    \tiny{\textit{Nota: Reemplazar con capturas de pantalla reales de la aplicación.}}
+\end{frame}
+
+
+\begin{frame}[fragile]{Cómo Ejecutar el Demo Local}
+    \begin{block}{Pasos}
+    \begin{enumerate}
+        \item Clonar el repositorio y crear entorno virtual.
+        \item Instalar dependencias:
+        \begin{lstlisting}[language=bash]
+pip install -r requirements.txt
+        \end{lstlisting}
+        \item Inicializar la base de datos (crea y puebla `project.sqlite`):
+        \begin{lstlisting}[language=bash]
+flask --app app init-db
+        \end{lstlisting}
+        \item Ejecutar la aplicación:
+        \begin{lstlisting}[language=bash]
+flask --app run
+        \end{lstlisting}
+        \item Acceder en \texttt{http://127.0.0.1:5000} (user: admin, pass: admin).
+    \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Ventajas y Conclusiones}
+    \begin{itemize}
+        \item<1-> \textbf{Código más limpio:} La lógica de negocio (vistas de Flask) no se contamina con código de seguridad, cache, etc.
+        \item<2-> \textbf{Reutilización:} Los decoradores se pueden aplicar a cualquier vista con una sola línea.
+        \item<3-> \textbf{Mantenibilidad:} Si se necesita cambiar la lógica de logging, solo se modifica el decorador \texttt{@audit}, no todas las vistas que lo usan.
+        \item<4-> \textbf{Testabilidad:} Cada aspecto puede ser probado de forma aislada.
+    \end{itemize}
+    \vfill
+    \begin{alertblock}{Conclusión Final}
+        AOP, a través de decoradores en Python, es una herramienta poderosa para construir aplicaciones robustas, modulares y fáciles de mantener.
+    \end{alertblock}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \Huge\bfseries ¿Preguntas?
+    \end{center}
+\end{frame}
+
+
+\end{document} 
