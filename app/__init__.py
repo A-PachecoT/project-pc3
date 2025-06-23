@@ -1,9 +1,34 @@
+# -*- coding: utf-8 -*-
+"""
+Módulo principal de la aplicación Flask.
+
+Este archivo contiene la fábrica de la aplicación, `create_app`, que se encarga de
+configurar y crear la instancia principal de la aplicación Flask.
+
+Funciones:
+    create_app: La fábrica de la aplicación.
+"""
 import os
 from flask import Flask, redirect, url_for
 
 
 def create_app(test_config=None):
-    # Create and configure the app
+    """
+    Crea, configura y devuelve una instancia de la aplicación Flask.
+
+    Esta es la función fábrica de la aplicación. Configura la app, inicializa
+    la base de datos y registra todos los blueprints de las diferentes
+    secciones (auth, products, orders, etc.).
+
+    Args:
+        test_config (dict, optional): Un mapeo de configuración para usar
+            durante las pruebas, en lugar de la configuración de instancia.
+            Defaults to None.
+
+    Returns:
+        Flask: La instancia de la aplicación Flask creada y configurada.
+    """
+    # Crear y configurar la aplicación
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY="dev",
@@ -11,24 +36,24 @@ def create_app(test_config=None):
     )
 
     if test_config is None:
-        # Load the instance config, if it exists, when not testing
+        # Cargar la configuración de la instancia, si existe, cuando no se está testeando
         app.config.from_pyfile("config.py", silent=True)
     else:
-        # Load the test config if passed in
+        # Cargar la configuración de prueba si se pasó
         app.config.from_mapping(test_config)
 
-    # Ensure the instance folder exists
+    # Asegurarse de que la carpeta de instancia exista
     try:
         os.makedirs(app.instance_path)
     except OSError:
         pass
 
-    # Initialize the database
+    # Inicializar la base de datos
     from . import db
 
     db.init_app(app)
 
-    # Register blueprints
+    # Registrar blueprints de los módulos
     from .auth import routes as auth_routes
 
     app.register_blueprint(auth_routes.bp)
@@ -49,9 +74,10 @@ def create_app(test_config=None):
 
     app.register_blueprint(promotion_routes.bp)
 
-    # A simple root route to redirect to login
+    # Una ruta raíz simple para redirigir a la página de login
     @app.route("/")
     def index():
+        """Ruta raíz que redirige al formulario de login."""
         return redirect(url_for("auth.login"))
 
     return app
