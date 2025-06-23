@@ -4,7 +4,11 @@
 \providecommand\HyField@AuxAddToCoFields[2]{}
 \providecommand \babel@aux [2]{\global \let \babel@toc \@gobbletwo }
 \@nameuse{bbl@beforestart}
-\babel@aux{nil}{}
+\catcode `"\active 
+\catcode `<\active 
+\catcode `>\active 
+\@nameuse{es@quoting}
+\babel@aux{spanish}{}
 \@writefile{nav}{\headcommand {\slideentry {0}{0}{1}{1/1}{}{0}}}
 \@writefile{nav}{\headcommand {\beamer@framepages {1}{1}}}
 \@writefile{toc}{\beamer@sectionintoc {1}{Introducción y Motivación}{2}{0}{1}}
