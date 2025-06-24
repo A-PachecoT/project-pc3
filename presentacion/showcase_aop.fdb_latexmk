@@ -1,6 +1,6 @@
 # Fdb version 4
-["pdflatex"] 1750650188.69972 "d:/02.Estudios/1.UNI/03.TOPICOS III/PROBLEMA_1/project-pc3/presentacion/showcase_aop.tex" "showcase_aop.pdf" "showcase_aop" 1750650191.20866 0
-  "C:/Users/gusta/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1750649763 81088 29d6fa367ac022d1b69251d68c0742e6 ""
+["pdflatex"] 1750725072.60347 "d:/02.Estudios/1.UNI/03.TOPICOS III/PROBLEMA_1/project-pc3/presentacion/showcase_aop.tex" "showcase_aop.pdf" "showcase_aop" 1750725075.13509 0
+  "C:/Users/gusta/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1750723692 83665 e74152440a79c80045ec5ef3cd1f6917 ""
   "C:/Users/gusta/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1748304387 13159325 e3e11ae577b754d0485670f6f7c968ab ""
   "C:/Users/gusta/AppData/Local/Programs/MiKTeX/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1233951848 1004 54797486969f23fa377b128694d548df ""
   "C:/Users/gusta/AppData/Local/Programs/MiKTeX/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1233951848 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""
@@ -237,14 +237,14 @@
   "C:/Users/gusta/AppData/Local/Programs/MiKTeX/tex/latex/translator/translator.sty" 1622471510 8765 56d370785f0143111ff9898b5adfe08e ""
   "C:/Users/gusta/AppData/Local/Programs/MiKTeX/tex/latex/url/url.sty" 1388490452 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "C:/Users/gusta/AppData/Local/Programs/MiKTeX/tex/latex/xcolor/xcolor.sty" 1729265222 55384 b454dec21c2d9f45ec0b793f0995b992 ""
-  "d:/02.Estudios/1.UNI/03.TOPICOS III/PROBLEMA_1/project-pc3/presentacion/showcase_aop.tex" 1750650188 12192 8f91cc3b9dc5b3415f1cd755cc65c5ff ""
+  "d:/02.Estudios/1.UNI/03.TOPICOS III/PROBLEMA_1/project-pc3/presentacion/showcase_aop.tex" 1750725071 12200 960e795b32eb87b9e88b51e4dd463c4f ""
   "login_ui.png" 1750649492 22918 ecc340f21b67c91c9e97851058acf9e1 ""
   "products_ui.png" 1750649596 80234 f72fb953d39b008cef87d79cbb40386c ""
-  "showcase_aop.aux" 1750650190 4615 d77ecfc4cd1140036f9413e37a94ae6f "pdflatex"
-  "showcase_aop.nav" 1750650190 2783 b72d4f87d44e923543edbb1f3211da8a "pdflatex"
-  "showcase_aop.out" 1750650190 1001 330cbf8d8da0523ae619a3b97a280d61 "pdflatex"
-  "showcase_aop.tex" 1750650188 12192 8f91cc3b9dc5b3415f1cd755cc65c5ff ""
-  "showcase_aop.vrb" 1750650190 1064 89b58aef7992a1ae3dafb10f196c63a8 "pdflatex"
+  "showcase_aop.aux" 1750725074 4615 d77ecfc4cd1140036f9413e37a94ae6f "pdflatex"
+  "showcase_aop.nav" 1750725074 2783 b72d4f87d44e923543edbb1f3211da8a "pdflatex"
+  "showcase_aop.out" 1750725074 1001 330cbf8d8da0523ae619a3b97a280d61 "pdflatex"
+  "showcase_aop.tex" 1750725071 12200 960e795b32eb87b9e88b51e4dd463c4f ""
+  "showcase_aop.vrb" 1750725074 1068 4412d6ba673d6b4717715bad1f3094b3 "pdflatex"
   (generated)
   "showcase_aop.aux"
   "showcase_aop.log"

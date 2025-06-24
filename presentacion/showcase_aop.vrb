@@ -16,7 +16,7 @@ flask --app app init-db
         \end{lstlisting}
         \item Ejecutar la aplicación:
         \begin{lstlisting}[language=bash]
-flask --app run
+flask --app app run
         \end{lstlisting}
         \item Acceder en \texttt{http://127.0.0.1:5000}.
             \begin{itemize}

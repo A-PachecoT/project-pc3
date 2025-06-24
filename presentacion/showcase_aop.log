@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2025.5.26)  22 JUN 2025 22:43
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2025.5.26)  23 JUN 2025 19:31
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1229,15 +1229,15 @@ Package rerunfilecheck Info: File `showcase_aop.out' has not changed.
 (rerunfilecheck)             Checksum: 330CBF8D8DA0523AE619A3B97A280D61;1001.
  ) 
 Here is how much of TeX's memory you used:
- 29771 strings out of 469923
- 597347 string characters out of 5469170
+ 29765 strings out of 469923
+ 597269 string characters out of 5469170
  1297491 words of memory out of 5000000
- 55956 multiletter control sequences out of 15000+600000
+ 55950 multiletter control sequences out of 15000+600000
  637229 words of font info for 78 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  128i,16n,123p,461b,1515s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/gusta/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmss10.pfb><C:/Users/gusta/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmss12.pfb><C:/Users/gusta/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmss8.pfb><C:/Users/gusta/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmss9.pfb><C:/Users/gusta/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmssbx10.pfb><C:/Users/gusta/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmssi10.pfb><C:/Users/gusta/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmssi8.pfb><C:/Users/gusta/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt10.pfb><C:/Users/gusta/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt12.pfb><C:/Users/gusta/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
-Output written on showcase_aop.pdf (22 pages, 292288 bytes).
+Output written on showcase_aop.pdf (22 pages, 292207 bytes).
 PDF statistics:
  414 PDF objects out of 1000 (max. 8388607)
  51 named destinations out of 1000 (max. 500000)
