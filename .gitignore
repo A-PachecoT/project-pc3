@@ -2,7 +2,6 @@
 *.aux
 *.log
 *.out
-*.pdf
 *.snm
 *.toc
 *.vrb
